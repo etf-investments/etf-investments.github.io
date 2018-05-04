@@ -31,7 +31,8 @@
         width: 12%;
         padding: 2px 4px 2px 0px;
       }
-      .stock-category, .stock-price, .stock-change, .stock-change-pct, .stock-mkt-cap , .stock-latest-volume, .stock-avg-total-volume {
+      .stock-category, .stock-price, .stock-change, .stock-change-pct, .stock-mkt-cap , .stock-latest-volume, .stock-avg-total-volume,
+      .flow-yesterday, .flow-1m, .flow-3m, .stock-change-pct-1m, .stock-change-pct-3m {
         width: 22%;
         text-align: right;
         padding: 2px 4px;
@@ -68,6 +69,12 @@
   </head>
 
   <body>
+    <h1> ETF Price and Flow Monitor </h1>
+    <p class="updated-timestamp"></p>
+    <p> 
+      ETFs allow us to monitor prices and money flows acoss sectors, factors, investment styles and countries. This page monitors flows across a select set of ETFs. Flows are calculated for yesterday, last 1 month and last 3 months. Monitoring flows and returns allows us to understand where money is moving and may help us discern whether returns are driven by flows or fundamentals. 
+    <p>
+
     <div class="stocks-container"></div>
 
     <p class="attribution">
@@ -106,24 +113,27 @@
 
       function addPortfolio(portfolio, portfolio_index) {
 
-      	let includeHeader = portfolio_index === 0;
+
         let tableHeaderHtml = '';
-        if (includeHeader) {
-          tableHeaderHtml = `
-            <thead>
-              <tr>
-                <th></th>
-                <th class="stock-category">Category</th>
-                <th class="stock-price">Last</th>
-                <th class="stock-change">Change</th>
-                <th class="stock-change-pct">Change%</th>
-             	<td class="stock-latest-volume">Volume</td>
-              	<td class="stock-avg-total-volume">ADV</td>
-                <th class="stock-mkt-cap">AUM</th>
-              </tr>
-            </thead>
-          `
-        }
+        tableHeaderHtml = `
+          <thead>
+            <tr>
+              <th></th>
+              <th class="stock-category">Category</th>
+              <th class="stock-price">Last</th>
+              <th class="stock-change">Change</th>
+              <th class="stock-change-pct">Change%</th>
+           	  <td class="stock-latest-volume">Volume</td>
+            	<td class="stock-avg-total-volume">ADV</td>
+              <th class="stock-mkt-cap">AUM</th>
+              <th class="flow-yesterday">Flow T-1</th>
+              <th class="flow-1m">Flow 1m</th>
+              <th class="flow-3m">Flow 3m</th>
+              <th class="stock-change-pct-1m">% Return 1m</th>
+              <th class="stock-change-pct-3m">% Return 3m</th>              
+            </tr>
+          </thead>
+        `
 
         let idx = 0;
         let tableBodyHtml = portfolio.items.map(item => {
@@ -140,6 +150,11 @@
               <td class="stock-latest-volume"></td>
               <td class="stock-avg-total-volume"></td>
               <td class="stock-mkt-cap"></td>
+              <td class="flow-yesterday">${signedFlows(item.flowYesterday)}</td>
+              <td class="flow-1m">${signedFlows(item.flow1m)}</td>
+              <td class="flow-3m">${signedFlows(item.flow3m)}</td> 
+              <td class="stock-change-pct-1m">${formatPercent(item.tr1m)}</td>
+              <td class="stock-change-pct-3m">${formatPercent(item.tr3m)}</td>                           
             </tr>
           `
 
@@ -181,9 +196,11 @@
 
             let formattedPrice = formatQuote(data.quote.latestPrice);
             let formattedChange = data.quote.change.toLocaleString('en', {'minimumFractionDigits': 2});
-            let formattedChangePercent = (data.quote.changePercent * 100).toFixed(1) + '%';
+            let formattedChangePercent = formatPercent(data.quote.changePercent);
             let formattedLatestVolume = formatNumberToWords(data.quote.latestVolume);
-            let formattedAvgTotalVolume = formatNumberToWords(data.quote.avgTotalVolume);
+            let formattedAvgTotalVolume = formatNumberToWords(data.quote.avgTotalVolume)
+
+
             let formattedMarketCap = '$' + formatNumberToWords(data.quote.marketCap);
             let rgbColor = data.quote.changePercent > 0 ? '0,255,0' : '255,0,0';
             let rgbOpacity = Math.min(Math.abs(data.quote.changePercent) * 20, 1);
@@ -217,6 +234,19 @@
               e.innerHTML = formattedMarketCap;
               e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
             });
+
+            // document.querySelectorAll(`[data-symbol="${symbol}"] .flow-yesteday`).forEach(e => {
+            //   e.innerHTML = formattedFlowYesterday;
+            //   e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
+            // });
+            // document.querySelectorAll(`[data-symbol="${symbol}"] .flow-1m`).forEach(e => {
+            //   e.innerHTML = formattedFlow1m;
+            //   e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
+            // });
+            // document.querySelectorAll(`[data-symbol="${symbol}"] .flow-3m`).forEach(e => {
+            //   e.innerHTML = formattedFlow3m;
+            //   e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
+            // });            
 
             if (addTitle) {
               document.querySelectorAll(`[data-symbol="${symbol}"] .stock-symbol a`).forEach(e => {
@@ -253,6 +283,15 @@
         return value.toLocaleString('en', options);
       }
 
+      function formatPercent(num) {
+        return (num* 100).toFixed(1) + '%';
+      }
+
+      function signedFlows(flowNumber) {
+          let formatted = formatNumberToWords(Math.abs(flowNumber));
+          return flowNumber<0 ? '-$'+formatted : formatted;
+      }
+
       function formatNumberToWords(marketCap) {
         let value, suffix;
         if (marketCap >= 1e12) {
@@ -264,16 +303,13 @@
         } else if (marketCap >= 1e6) {
           value = marketCap / 1e6;
           suffix = 'M';
-        }
-		else if (marketCap >= 1e3) {
+        } else if (marketCap >= 1e3) {
           value = marketCap / 1e3;
           suffix = 'K';
-        }
-		else {
+        } else {
           value = marketCap;
           suffix = '';
         }
-
 
         let digits = value < 10 ? 1 : 0;
 
