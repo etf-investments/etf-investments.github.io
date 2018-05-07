@@ -62,6 +62,10 @@
       summary:hover { cursor: pointer; }
       summary::-webkit-details-marker { display: none; }
     </style>
+
+
+  <script type="text/javascript" src="universe.json"></script>
+
 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<script>
 	  (adsbygoogle = window.adsbygoogle || []).push({
@@ -102,15 +106,27 @@
 
     <p class="updated-timestamp"></p>
 
-	<script type="text/javascript" src="universe.json"></script>
+
 
     <script>
       'use strict';
 
+      var range  = r => Array.apply(null, Array(r)).map(function (_, i) {return i;});
 
+      function addSortableLogic() {
+        var ts = document.getElementsByClassName("sortable");
+        for (var i in range(ts.length)){
+          var th = ts[i].getElementsByTagName("th");
+          for(var i2 in range(th.length)){
+            th[i2].innerHTML = "<a href='' onClick=\"return sortTable('" + ts[i].id + "', " + i2 +");\">" + th[i2].innerHTML + '</a>';
+            th[i2].style.cursor = "pointer";  
+            th[i2].sortDir = 'desc';        
+           }
+        }
+      }      
 
       const PORTFOLIOS = portfoliosFromQueryParams() || DEFAULT_PORTFOLIOS;
-      const REFRESH_SECONDS = 10;
+      const REFRESH_SECONDS = 25;
       const BATCH_SIZE = 100;
       const BASE_URL = 'https://api.iextrading.com/1.0/stock/market/batch';
 
@@ -122,6 +138,7 @@
       symbols = symbols.filter((s, i) => symbols.indexOf(s) === i);
       updateData('addTitle');
       setInterval(updateData, REFRESH_SECONDS * 1000);
+      addSortableLogic();
 
       function addPortfolio(portfolio, portfolio_index) {
 
@@ -130,13 +147,13 @@
         tableHeaderHtml = `
           <thead>
             <tr>
-              <th></th>
+              <th>Ticker</th>
               <th class="stock-category">Category</th>
               <th class="stock-price">Last</th>
               <th class="stock-change">Change</th>
               <th class="stock-change-pct">Change%</th>
-           	  <td class="stock-latest-volume">Volume</td>
-            	<td class="stock-avg-total-volume">ADV</td>
+           	  <th class="stock-latest-volume">Volume</th>
+            	<th class="stock-avg-total-volume">ADV</th>
               <th class="stock-mkt-cap">AUM</th>
               <th class="flow-yesterday">Flow T-1</th>
               <th class="flow-1m">Flow 1m</th>
@@ -162,11 +179,11 @@
               <td class="stock-latest-volume"></td>
               <td class="stock-avg-total-volume"></td>
               <td class="stock-mkt-cap"></td>
-              <td class="flow-yesterday">${signedFlows(item.flowYesterday)}</td>
-              <td class="flow-1m">${signedFlows(item.flow1m)}</td>
-              <td class="flow-3m">${signedFlows(item.flow3m)}</td> 
-              <td class="stock-change-pct-1m">${formatPercent(item.tr1m)}</td>
-              <td class="stock-change-pct-3m">${formatPercent(item.tr3m)}</td>                           
+              <td class="flow-yesterday" original_numeric=${item.flowYesterday}>${signedFlows(item.flowYesterday)}</td>
+              <td class="flow-1m" original_numeric=${item.flow1m}>${signedFlows(item.flow1m)}</td>
+              <td class="flow-3m" original_numeric=${item.flow3m}>${signedFlows(item.flow3m)}</td> 
+              <td class="stock-change-pct-1m" original_numeric=${item.tr1m}>${formatPercent(item.tr1m)}</td>
+              <td class="stock-change-pct-3m" original_numeric=${item.tr3m}>${formatPercent(item.tr3m)}</td>                           
             </tr>
           `
 
@@ -178,12 +195,14 @@
         portfolioDiv.innerHTML = `
           <details open>
             <summary><h2>${portfolio.name}</h2></summary>
-            <table>${tableHeaderHtml}<tbody>${tableBodyHtml}</tbody></table>
+            <table class="sortable" id="table-item-${portfolio_index}">${tableHeaderHtml}<tbody>${tableBodyHtml}</tbody></table>
           </details>
         `;
 
         containerDiv.appendChild(portfolioDiv);
       }
+
+
 
       function updateData(addTitle) {
         let numberOfBatches = Math.ceil(symbols.length / BATCH_SIZE);
@@ -195,6 +214,71 @@
 
         updatedDiv.innerHTML = `Data updated at ${(new Date()).toLocaleString()}`;
       }
+
+      function sortTable(table_id,col_num) {
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById(table_id);
+        switching = true;
+        /* Make a loop that will continue until
+        no switching has been done: */
+        var header = table.getElementsByTagName("TH")[col_num];
+        while (switching) {
+          // Start by saying: no switching is done:
+          switching = false;
+          rows = table.getElementsByTagName("TR");
+          /* Loop through all table rows (except the
+          first, which contains table headers): */
+          for (i = 1; i < (rows.length - 1); i++) {
+            // Start by saying there should be no switching:
+            shouldSwitch = false;
+            /* Get the two elements you want to compare,
+            one from current row and one from the next: */
+            x = rows[i].getElementsByTagName("TD")[col_num];
+            y = rows[i + 1].getElementsByTagName("TD")[col_num];
+            // Check if the two rows should switch place:
+            var yval = y.innerHTML;
+            var xval = x.innerHTML;
+
+            if( y.originalNumeric !== undefined )
+               yval = y.originalNumeric
+            else if(y.getAttribute("original_numeric") !== null)
+              y.originalNumeric = parseFloat(y.getAttribute("original_numeric"))
+              yval = y.originalNumeric 
+
+            if( x.originalNumeric !== undefined )
+               xval = x.originalNumeric
+            else if(x.getAttribute("original_numeric") !== null)
+              x.originalNumeric = parseFloat(x.getAttribute("original_numeric"))
+              xval = x.originalNumeric 
+
+            if(header.sortDir === 'desc'){
+              if (xval > yval) {
+                // I so, mark as a switch and break the loop:
+                shouldSwitch= true;
+                break;
+              }
+            }
+            else {
+              if (xval < yval) {
+                // I so, mark as a switch and break the loop:
+                shouldSwitch= true;
+                break;
+              }
+            }
+          }
+          if (shouldSwitch) {
+            /* If a switch has been marked, make the switch
+            and mark that a switch has been done: */
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+          }
+        }
+
+        header.sortDir === 'desc' ? header.sortDir = 'asc' : header.sortDir = 'desc';
+        return false;
+      }
+
+
 
       function updateDataForBatch(symbols, addTitle) {
         let filters = ['latestPrice', 'latestVolume', 'avgTotalVolume','change', 'changePercent', 'marketCap'];
@@ -219,47 +303,40 @@
 
             document.querySelectorAll(`[data-symbol="${symbol}"] .stock-price`).forEach(e => {
               e.innerHTML = formattedPrice;
+              e.originalNumeric = data.quote.latestPrice;
               e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
             });
 
             document.querySelectorAll(`[data-symbol="${symbol}"] .stock-change`).forEach(e => {
               e.innerHTML = formattedChange;
+              e.originalNumeric = data.quote.change;
               e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
             });
 
             document.querySelectorAll(`[data-symbol="${symbol}"] .stock-latest-volume`).forEach(e => {
               e.innerHTML = formattedLatestVolume;
+              e.originalNumeric = data.quote.latestVolume;
               e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
             });
 
             document.querySelectorAll(`[data-symbol="${symbol}"] .stock-avg-total-volume`).forEach(e => {
               e.innerHTML = formattedAvgTotalVolume;
+              e.originalNumeric = data.quote.avgTotalVolume;
               e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
             });                      
 
             document.querySelectorAll(`[data-symbol="${symbol}"] .stock-change-pct`).forEach(e => {
               e.innerHTML = formattedChangePercent;
+              e.originalNumeric = data.quote.changePercent;
               e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
             });
 
             document.querySelectorAll(`[data-symbol="${symbol}"] .stock-mkt-cap`).forEach(e => {
               e.innerHTML = formattedMarketCap;
+              e.originalNumeric = data.quote.marketCap;
               e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
             });
-
-            // document.querySelectorAll(`[data-symbol="${symbol}"] .flow-yesteday`).forEach(e => {
-            //   e.innerHTML = formattedFlowYesterday;
-            //   e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
-            // });
-            // document.querySelectorAll(`[data-symbol="${symbol}"] .flow-1m`).forEach(e => {
-            //   e.innerHTML = formattedFlow1m;
-            //   e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
-            // });
-            // document.querySelectorAll(`[data-symbol="${symbol}"] .flow-3m`).forEach(e => {
-            //   e.innerHTML = formattedFlow3m;
-            //   e.setAttribute('style', `background-color: rgba(${rgbColor}, ${rgbOpacity})`);
-            // });            
-
+   
             if (addTitle) {
               document.querySelectorAll(`[data-symbol="${symbol}"] .stock-symbol a`).forEach(e => {
                 e.setAttribute('title', data.quote.companyName);
