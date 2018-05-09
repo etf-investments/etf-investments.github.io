@@ -5,20 +5,14 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
-    <title>ETF Flows</title>
+    <title>ETF Fund Flows</title>
     <link rel="icon" href="https://d3v3cbxkdlyonc.cloudfront.net/stocks/favicon.ico">
-    <meta name="description" content="ETF Flow Monitor">
-
-    <!-- Update your html tag to include the itemscope and itemtype attributes. -->
+    <meta name="description" content="ETF Fund Flow Monitor">
     <html itemscope itemtype="http://schema.org/FinancialService">
-
-    <!-- Place this data between the <head> tags of your website -->
     <title>ETF Flow and Return Momentum Monitor and Signals</title>
-    <meta name="description" content="Monitor ETF prices and money flows acoss sectors, factors, investment styles and countries. " />
-
-    <!-- Schema.org markup for Google+ -->
-    <meta itemprop="name" content="ETF Flow and Return Momentum Monitor and Signals">
-    <meta itemprop="description" content="Monitor ETF prices and money flows acoss sectors, factors, investment styles and countries. "">
+    <meta name="description" content="Monitor ETF prices and fund flows acoss sectors, factors, investment styles and countries. " />
+    <meta itemprop="name" content="ETF Fund Flow and Return Momentum Monitor and Signals">
+    <meta itemprop="description" content="Monitor ETF prices and fund flows acoss sectors, factors, investment styles and countries. "">
 
 
     <style>
@@ -85,10 +79,10 @@
   </head>
 
   <body>
-    <h1> ETF Price and Flow Monitor </h1>
+    <h1> ETF Price and Fund Flow Monitor </h1>
     <p class="updated-timestamp"></p>
     <p> 
-      ETFs allow us to monitor prices and money flows acoss sectors, factors, investment styles and countries. This page monitors flows across a select set of ETFs. Flows are calculated for yesterday, last 1 month and last 3 months. Monitoring flows and returns allows us to understand where money is moving and may help us discern whether returns are driven by flows or fundamentals. 
+      ETFs allow us to monitor prices and fund flows acoss sectors, factors, investment styles and countries. This page monitors flows across a select set of ETFs. Flows are calculated for yesterday, last 1 month and last 3 months. Monitoring flows and returns allows us to understand where money is moving and may help us discern whether returns are driven by flows or fundamentals. 
     <p>
 
     <div class="stocks-container"></div>
@@ -99,7 +93,7 @@
     </p>
 
     <p> 
-         Idea and code adapted from <a href="https://github.com/toddwschneider/stocks">https://github.com/toddwschneider/stocks</a>
+         Code adapted from: <a href="https://github.com/toddwschneider/stocks">https://github.com/toddwschneider/stocks</a>
 	</p>
 	<p><a href="mailto:trade@etf.investments">Learn More </a></p>
 
@@ -219,37 +213,34 @@
         var table, rows, switching, i, x, y, shouldSwitch;
         table = document.getElementById(table_id);
         switching = true;
-        /* Make a loop that will continue until
-        no switching has been done: */
+
         var header = table.getElementsByTagName("TH")[col_num];
         while (switching) {
-          // Start by saying: no switching is done:
           switching = false;
           rows = table.getElementsByTagName("TR");
-          /* Loop through all table rows (except the
-          first, which contains table headers): */
+    
           for (i = 1; i < (rows.length - 1); i++) {
-            // Start by saying there should be no switching:
             shouldSwitch = false;
-            /* Get the two elements you want to compare,
-            one from current row and one from the next: */
             x = rows[i].getElementsByTagName("TD")[col_num];
             y = rows[i + 1].getElementsByTagName("TD")[col_num];
-            // Check if the two rows should switch place:
+
             var yval = y.innerHTML;
             var xval = x.innerHTML;
 
+
             if( y.originalNumeric !== undefined )
                yval = y.originalNumeric
-            else if(y.getAttribute("original_numeric") !== null)
+            else if(y.getAttribute("original_numeric") !== null) {
               y.originalNumeric = parseFloat(y.getAttribute("original_numeric"))
               yval = y.originalNumeric 
+            }
 
             if( x.originalNumeric !== undefined )
                xval = x.originalNumeric
-            else if(x.getAttribute("original_numeric") !== null)
+            else if(x.getAttribute("original_numeric") !== null){
               x.originalNumeric = parseFloat(x.getAttribute("original_numeric"))
               xval = x.originalNumeric 
+            }
 
             if(header.sortDir === 'desc'){
               if (xval > yval) {
