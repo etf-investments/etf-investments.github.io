@@ -1,0 +1,60 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+      "Oxygen", "Ubuntu", "Helvetica Neue", Arial, sans-serif;
+
+  }
+  table { font-family: Courier, monospace; }
+  .stocks-container {
+    margin-bottom: 1.5em;
+    width: 100%;
+    max-width: 600px;
+  }
+  .stocks-container a { text-decoration: none; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.9em;
+    white-space:nowrap
+  }
+  .stock-symbol {
+    width: 12%;
+    padding: 2px 4px 2px 0px;
+  }
+  
+   .stock-category {
+     width: 250px;
+   }
+
+  .stock-price, .stock-change, .stock-change-pct,
+  .stock-mkt-cap , .stock-latest-volume, .stock-avg-total-volume,
+  .flow-yesterday, .flow-1m, .flow-3m, .stock-change-pct-1m,
+  .stock-change-pct-3m {
+    width: 22%;
+    text-align: right;
+    padding: 2px 4px;
+  }
+
+  td.flow-1m{
+    border-left: 1px solid #000;
+  }
+
+  td.stock-change-pct-1m {
+    border-right: 1px solid #000;
+  }
+
+  td.stock-change-pct-3m{
+    border-right: 1px solid #000;
+  }
+
+  @media (max-width: 576px) {
+    table { margin-bottom: 3em; }
+    .stock-mkt-cap { display: none; }
+    .stock-symbol { width: 16%; }
+    .stock-price, .stock-change, .stock-change-pct { width: 28%; }
+    td.stock-symbol, td.stock-price, td.stock-change, td.stock-change-pct {
+      padding-top: 1em;
+      padding-bottom: 1em;
+    }
+  }
+  summary:hover { cursor: pointer; }
+  summary::-webkit-details-marker { display: none; }
