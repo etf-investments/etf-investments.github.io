@@ -134,6 +134,7 @@ function addPortfolio(portfolio, portfolio_index) {
   portfolioDiv.innerHTML = `
     <details open>
       <summary><h2>${portfolio.name}</h2></summary>
+      <i>${portfolio.note}</i>
       <table class="sortable" id="table-item-${portfolio_index}">${tableHeaderHtml}<tbody>${tableBodyHtml}</tbody></table>
     </details>
   `;
