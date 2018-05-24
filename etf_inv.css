@@ -6,15 +6,17 @@ body {
   table { font-family: Courier, monospace; }
   .stocks-container {
     margin-bottom: 1.5em;
-    width: 100%;
+    width: 1024px;
     max-width: 600px;
   }
   .stocks-container a { text-decoration: none; }
   table {
     border-collapse: collapse;
-    width: 100%;
+    width: 1024px;
     font-size: 0.9em;
-    white-space:nowrap
+    white-space:nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;    
   }
   .stock-symbol {
     width: 12%;
@@ -23,6 +25,9 @@ body {
   
    .stock-category {
      width: 250px;
+     max-width: 250px;
+     overflow: hidden;
+     text-overflow: ellipsis;
    }
 
   .stock-price, .stock-change, .stock-change-pct,
@@ -47,11 +52,18 @@ body {
   }
 
   @media (max-width: 576px) {
-    table { margin-bottom: 3em; }
-    .stock-mkt-cap { display: none; }
-    .stock-symbol { width: 16%; }
-    .stock-price, .stock-change, .stock-change-pct { width: 28%; }
-    td.stock-symbol, td.stock-price, td.stock-change, td.stock-change-pct {
+    p {
+      line-height: 50%;
+    }
+    table {
+        margin-bottom: 3em;
+        width: 100%;
+      }
+    .stock-mkt-cap, .stock-category, .flow-1m, .flow-3m, .stock-change-pct-1m,
+  .stock-change-pct-3m
+     { display: none; }
+    .stock-symbol { width: 12%; }
+    td {
       padding-top: 1em;
       padding-bottom: 1em;
     }
