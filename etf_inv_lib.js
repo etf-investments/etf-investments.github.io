@@ -72,17 +72,53 @@ function drawChart() {
 
 }
 
+function drawHistFlows() {
+      var data = new google.visualization.DataTable();
+
+      var careFlows = {};
+      for (var i = 0; i < HIST_FLOWS.length; i++){
+        if(HIST_FLOWS[i].ticker === careTicker){
+          careFlows = HIST_FLOWS[i];
+          break;
+        }
+      }
+
+      data.addColumn('string', 'Lookback');
+      data.addColumn('number', 'Cumulative Flow');
+
+      data.addRows([
+        ['Yesterday', careFlows.yesterday],
+        ['1 Week', careFlows.w1],        
+        ['1 Month', careFlows.m1],
+        ['2 Months', careFlows.m2],
+        ['3 Months', careFlows.m3],
+        ['6 Months', careFlows.m6],
+        ['1 Year', careFlows.y1],
+      ]);
+
+      var options = {
+        title: 'Cumulative Flows',
+        hAxis: {
+          title: 'Lookback Time',
+        },
+        vAxis: {
+          title: 'USD Flows ($1mm)'
+        }
+      };
+
+      var chart = new google.visualization.ColumnChart(
+        document.getElementById('hist_flow_div'));
+
+      chart.draw(data, options);
+ }
 
 function updateChartData(ticker) {
-    google.charts.load('current', {'packages':['line', 'corechart']});
     let url = `https://api.iextrading.com/1.0/stock/${ticker}/chart/1y`;
     fetch(url).then(response => response.json()).then(json => {
         chartData = json;
         google.charts.setOnLoadCallback(drawChart);
     })
 }
-
-
 
 function addPortfolio(portfolio, portfolio_index) {
 
