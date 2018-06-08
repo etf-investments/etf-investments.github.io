@@ -8,15 +8,13 @@
     <link rel="icon" href="https://d3v3cbxkdlyonc.cloudfront.net/stocks/favicon.ico">
     <meta name="description" content="ETF Fund Flow Monitor">
     <html itemscope itemtype="http://schema.org/FinancialService">
-    <title>ETF Fund Flows Signals</title>
+    <title>ETF Fund Flows & Signals</title>
     <meta name="description" content="Monitor ETF prices and fund flows acoss sectors, factors, investment styles and countries. " />
     <meta itemprop="name" content="ETF Fund Flow and Return Momentum Monitor and Signals">
     <meta itemprop="description" content="Monitor ETF prices and fund flows acoss sectors, factors, investment styles and countries. "">
   
     <link rel="stylesheet" type="text/css" href="etf_inv.css">
-
-  <script type="text/javascript" src="universe.json"></script>
-  <script type="text/javascript" src="etf_inv_lib.js"></script>
+    <script type="text/javascript" src="etf_inv_lib.js"></script>
 
 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<script>
@@ -37,35 +35,19 @@
   </head>
 
   <body>
-    <h1> ETF Price and Fund Flow Monitor </h1>
-     <p>
-      <a href="index.html">Main</a> |
-      <a href="fund_flows_us_sectors.html">US Sector</a> |
-      <a href="fund_flows_us_fixed_income.html">US Fixed Income</a> |
-      <a href="fund_flows_yesterday.html">Top Flows Yesterday</a> |
-      <a href="fund_flows_ytd.html">Top Flows YTD</a> 
-    </p>  
-     <p>
-      <a href="faq.html">FAQ</a> |
-      <a href="mailto:trade@etf.investments">Contact</a> |
-      <a href="disclaimer.html">Disclaimer</a> |
-      <a href="privacy_policy.html">Privacy Policy</a> 
-
-    </p>
-
+    <div class="page-title"></div>
+    <div class="page-links"></div>
     <p class="updated-timestamp"></p>
     <div class="stocks-container"></div>
 
     <script>
+      let pageTitleDiv = document.querySelector('.page-title');
+      let pageLinksDiv = document.querySelector('.page-links');
       let containerDiv = document.querySelector('.stocks-container');
       let updatedDiv = document.querySelector('.updated-timestamp');
-      let symbols = [];
-      const PORTFOLIOS =  DEFAULT_PORTFOLIOS;
-      const REFRESH_SECONDS = 25;
-      const BATCH_SIZE = 100;
-      const BASE_URL = 'https://api.iextrading.com/1.0/stock/market/batch';
 
-      loadPrices();
+      loadPageDetails();
+      addPageLinks();
     </script>
   </body>
 </html>
