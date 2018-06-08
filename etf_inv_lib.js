@@ -442,6 +442,8 @@ function formatNumberToWords(marketCap) {
 
   let digits = value < 10 ? 1 : 0;
 
+  if(!value) return value; // return null 
+
   return value.toFixed(digits) + suffix;
 }
 
