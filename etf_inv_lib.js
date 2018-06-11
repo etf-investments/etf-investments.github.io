@@ -131,7 +131,8 @@ function addPageLinks() {
      <p>
       <a href="index.html">Main</a> |
       <a href="etf_lists.html?page=fund_flows_us_sectors&title=US Sector ETFs">US Sector</a> |
-      <a href="etf_lists.html?page=fund_flows_us_fixed_income&title=US Fixed Income ETFs">US Fixed Income</a> |
+      <a href="etf_lists.html?page=fund_flows_us_fixed_income&title=US Fixed Income ETFs">US Fixed Income</a> 
+      <a href="etf_lists.html?page=usff_dur&title=US Fixed Income ETFs - Duration Grouped">by Duration</a> |
       <a href="etf_lists.html?page=fund_flows_yesterday&title=Top ETF Flows Yesterday">Top Flows Yesterday</a> |
       <a href="etf_lists.html?page=fund_flows_ytd&title=Top ETF Flows YTD">Top Flows YTD</a> |
       <a href="etf_lists.html?page=newest_etfs&title=Recent ETF Listings">Newest Listings</a> 
