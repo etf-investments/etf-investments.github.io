@@ -450,7 +450,7 @@ function loadPageDetails() {
 
 
 function symbolUrl(symbol) {
-  return `stocks/${symbol}.html`;
+  return `https://etf.investments/stocks/${symbol}.html`;
 }
 
 function formatQuote(value) {
