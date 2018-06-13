@@ -32,6 +32,7 @@
 
   <body>
     <h1> Chart for ^^TICKER^^ </h1>
+    <div class="page-links"></div>
     <p class="updated-timestamp"></p>
     <h2>Historical Price </h2>
 
@@ -53,7 +54,9 @@
       google.charts.setOnLoadCallback(drawHistFlows);
 
       let containerDiv = document.querySelector('.stocks-container');
+      let pageLinksDiv = document.querySelector('.page-links');
 
+      addPageLinks();
       loadPrices();
     </script>
   </body>
