@@ -33,7 +33,7 @@ function loadPrices(){
 
 };
 
-var str2date = s => {var ss = s.split('-'); return new Date(ss[0],ss[1],ss[2])}; 
+var str2date = s => {var ss = s.split('-'); return new Date(ss[0],ss[1]-1,ss[2])}; 
 
 function drawChart() {
 
