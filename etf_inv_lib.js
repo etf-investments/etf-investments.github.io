@@ -75,7 +75,7 @@ function drawChart() {
   var c = new google.visualization.LineChart(chartDiv);
   c.draw(data, options);
 
-}
+ };
 
 function drawHistFlows() {
       var data = new google.visualization.DataTable();
@@ -133,10 +133,15 @@ function addPageLinks() {
       <a href="etf_lists.html?page=fund_flows_us_sectors&title=US Sector ETFs">US Sector</a> |
       <a href="etf_lists.html?page=fund_flows_us_fixed_income&title=US Fixed Income ETFs">US Fixed Income</a> 
       <a href="etf_lists.html?page=usff_dur&title=US Fixed Income ETFs - Duration Grouped">by Duration</a> |
+      <a href="etf_lists.html?page=global_ff&title=Global Fixed Income ETFs">Global Fixed Income</a> 
+      <a href="etf_lists.html?page=global_ff_dur&title=Global Fixed Income ETFs - Duration Grouped">by Duration</a> |
+
       <a href="etf_lists.html?page=fund_flows_yesterday&title=Top ETF Flows Yesterday">Top Flows Yesterday</a> |
       <a href="etf_lists.html?page=fund_flows_ytd&title=Top ETF Flows YTD">Top Flows YTD</a> |
       <a href="etf_lists.html?page=newest_etfs&title=Recent ETF Listings">Newest Listings</a> |
-      <a href="etf_lists.html?page=commodity&title=Commodity ETFs">Commodities</a> 
+      <a href="etf_lists.html?page=commodity&title=Commodity ETFs">Commodities</a> |
+      <a href="etf_lists.html?page=leveraged&title=Leveraged ETFs">Leveraged</a> 
+
     </p>  
      <p>
       <a href="faq.html">FAQ</a> |
@@ -351,7 +356,10 @@ function updateDataForBatch(symbols, addTitle) {
       if (typeof(data) === 'undefined') return;
 
       let formattedPrice = formatQuote(data.quote.latestPrice);
-      let formattedChange = data.quote.change.toLocaleString('en', {'minimumFractionDigits': 2});
+      let formattedChange = "0";
+      if(data.quote.change){
+        formattedChange = data.quote.change.toLocaleString('en', {'minimumFractionDigits': 2});
+      }
       let formattedChangePercent = formatPercent(data.quote.changePercent,2);
       let formattedLatestVolume = formatNumberToWords(data.quote.latestVolume);
       let formattedAvgTotalVolume = formatNumberToWords(data.quote.avgTotalVolume)
@@ -455,6 +463,8 @@ function symbolUrl(symbol) {
 }
 
 function formatQuote(value) {
+  if(!value) return value; // return null 
+
   let options = {
     'minimumFractionDigits': 2,
     'style': 'currency',
