@@ -130,6 +130,7 @@ function addPageLinks() {
  pageLinks = `
      <p>
       <a href="index.html">Main</a> |
+      <a href="etf_lists.html?page=us_broads&title=US Broad Exposure ETFs">US Broad Exposure</a> |      
       <a href="etf_lists.html?page=fund_flows_us_sectors&title=US Sector ETFs">US Sector</a> |
       <a href="etf_lists.html?page=fund_flows_us_fixed_income&title=US Fixed Income ETFs">US Fixed Income</a> 
       <a href="etf_lists.html?page=usff_dur&title=US Fixed Income ETFs - Duration Grouped">by Duration</a> |
