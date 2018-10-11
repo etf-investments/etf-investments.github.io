@@ -130,8 +130,8 @@ function addPageLinks() {
  pageLinks = `
      <p>
       <a href="index.html">Main</a> |
-      <a href="etf_lists.html?page=us_broads&title=US Broad Exposure ETFs">US Broad Exposure</a> |      
-      <a href="etf_lists.html?page=fund_flows_us_sectors&title=US Sector ETFs">US Sector</a> |
+      <a href="etf_lists.html?page=us_broad&title=US Broad Exposure ETFs">US Broad Market</a> or by  
+      <a href="etf_lists.html?page=fund_flows_us_sectors&title=US Sector ETFs"> Sector</a> |
       <a href="etf_lists.html?page=fund_flows_us_fixed_income&title=US Fixed Income ETFs">US Fixed Income</a> 
       <a href="etf_lists.html?page=usff_dur&title=US Fixed Income ETFs - Duration Grouped">by Duration</a> |
       <a href="etf_lists.html?page=global_ff&title=Global Fixed Income ETFs">Global Fixed Income</a> 
@@ -170,7 +170,7 @@ function addPortfolio(portfolio, portfolio_index) {
         <th class="stock-avg-total-volume">ADV</th>
         <th class="stock-volume-projection">VolProj</th>
         <th class="stock-mkt-cap">AUM</th>
-        <th class="flow-yesterday">Flow T-1</th>
+        <th class="flow-yesterday">Flow T-2</th>
         <th class="flow-1m">Flow 1m</th>
         <th class="stock-change-pct-1m">% Return 1m</th>        
         <th class="flow-3m">Flow 3m</th>
